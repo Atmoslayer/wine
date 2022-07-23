@@ -1,0 +1,4 @@
+openpyxl==3.0.10
+pandas==1.4.3
+pytz==2022.1
+six==1.16.0
