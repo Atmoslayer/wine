@@ -1,3 +1,4 @@
+import argparse
 import http.server
 import socketserver
 import datetime
@@ -41,7 +42,16 @@ def define_year_word_ending(year_number):
 
     return year_word
 
+
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file_name', help='Enter database file name', type=str)
+    argument = parser.parse_args()
+
+    file_name = argument.file_name
+
+
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -53,7 +63,7 @@ if __name__ == '__main__':
     current_year = datetime.datetime.now().year
     year_number = current_year - year_of_foundation
 
-    excel_data = pandas.read_excel('wine3.xlsx', na_values=' ', keep_default_na=False,
+    excel_data = pandas.read_excel(file_name, na_values=' ', keep_default_na=False,
                                    usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'])
     wines = excel_data.to_dict(orient='records')
 
