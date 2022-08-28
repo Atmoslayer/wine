@@ -13,7 +13,7 @@ PORT = 8080
 
 Handler = http.server.SimpleHTTPRequestHandler
 
-Handler.extensions_map={
+Handler.extensions_map = {
         '.manifest': 'text/cache-manifest',
   '.html': 'text/html',
         '.png': 'image/png',
@@ -51,7 +51,6 @@ if __name__ == '__main__':
 
     file_name = argument.file_name
 
-
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -59,9 +58,11 @@ if __name__ == '__main__':
 
     template = env.get_template('template.html')
 
-    year_of_foundation = datetime.datetime(year=1920, month=1, day=1, hour=0).year
-    current_year = datetime.datetime.now().year
-    year_number = current_year - year_of_foundation
+    date_of_foundation = datetime.datetime(year=1920, month=1, day=1, hour=0)
+    current_date = datetime.datetime.now()
+    date_difference_in_days = (current_date - date_of_foundation).days
+    year_number = int(date_difference_in_days // 365.2425)
+
 
     excel_data = pandas.read_excel(file_name, na_values=' ', keep_default_na=False,
                                    usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'])
@@ -73,7 +74,6 @@ if __name__ == '__main__':
         formatted_wines.setdefault(wine['Категория'], []).append(wine)
 
     rendered_page = template.render(wines=formatted_wines, year_info=f'Уже {year_number} {define_year_word_ending(year_number)} с вами!')
-
 
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
