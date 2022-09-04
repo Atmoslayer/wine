@@ -58,10 +58,9 @@ if __name__ == '__main__':
 
     template = env.get_template('template.html')
 
-    date_of_foundation = datetime.datetime(year=1920, month=1, day=1, hour=0)
-    current_date = datetime.datetime.now()
-    date_difference_in_days = (current_date - date_of_foundation).days
-    year_number = int(date_difference_in_days // 365.2425)
+    year_of_foundation = 1920
+    current_year = datetime.datetime.now().year
+    year_number = current_year - year_of_foundation
 
     excel_data = pandas.read_excel(file_name, na_values=' ', keep_default_na=False,
                                    usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'])
