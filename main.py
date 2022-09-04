@@ -45,10 +45,9 @@ def define_year_word_ending(year_number):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('file_name', help='Enter database file name', type=str)
+    parser.add_argument('--enter', help='Enter database file path', default='wine.xlsx')
     argument = parser.parse_args()
-
-    file_name = argument.file_name
+    filepath = argument.enter
 
     env = Environment(
         loader=FileSystemLoader('.'),
@@ -61,17 +60,16 @@ if __name__ == '__main__':
     current_year = datetime.datetime.now().year
     year_number = current_year - year_of_foundation
 
-    excel_data = pandas.read_excel(file_name,
-                                   na_values=' ',
-                                   keep_default_na=False,
-                                   usecols=['Категория',
-                                            'Название',
-                                            'Сорт',
-                                            'Цена',
-                                            'Картинка',
-                                            'Акция'])
+    with open(filepath, 'r') as file:
 
-    wines = excel_data.to_dict(orient='records')
+        parsed_excel = pandas.read_excel(io=file.name, na_values=' ', keep_default_na=False, usecols=['Категория',
+                                                                                                      'Название',
+                                                                                                      'Сорт',
+                                                                                                      'Цена',
+                                                                                                      'Картинка',
+                                                                                                      'Акция'])
+
+    wines = parsed_excel.to_dict(orient='records')
 
     formatted_wines = {}
 
