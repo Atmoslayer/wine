@@ -4,7 +4,6 @@ import socketserver
 import datetime
 import pandas
 
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -15,13 +14,13 @@ Handler = http.server.SimpleHTTPRequestHandler
 
 Handler.extensions_map = {
         '.manifest': 'text/cache-manifest',
-  '.html': 'text/html',
+        '.html': 'text/html',
         '.png': 'image/png',
-  '.jpg': 'image/jpg',
-  '.svg':  'image/svg+xml',
-  '.css':  'text/css',
-  '.js':  'application/x-javascript',
-  '': 'application/octet-stream', # Default
+        '.jpg': 'image/jpg',
+        '.svg':  'image/svg+xml',
+        '.css':  'text/css',
+        '.js':  'application/x-javascript',
+        '': 'application/octet-stream'
     }
 
 
@@ -62,8 +61,15 @@ if __name__ == '__main__':
     current_year = datetime.datetime.now().year
     year_number = current_year - year_of_foundation
 
-    excel_data = pandas.read_excel(file_name, na_values=' ', keep_default_na=False,
-                                   usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'])
+    excel_data = pandas.read_excel(file_name,
+                                   na_values=' ',
+                                   keep_default_na=False,
+                                   usecols=['Категория',
+                                            'Название',
+                                            'Сорт',
+                                            'Цена',
+                                            'Картинка',
+                                            'Акция'])
 
     wines = excel_data.to_dict(orient='records')
 
@@ -72,7 +78,9 @@ if __name__ == '__main__':
     for wine in wines:
         formatted_wines.setdefault(wine['Категория'], []).append(wine)
 
-    rendered_page = template.render(wines=formatted_wines, year_title=f'Уже {year_number} {define_year_word_ending(year_number)} с вами!')
+    year_title = f'Уже {year_number} {define_year_word_ending(year_number)} с вами!'
+    rendered_page = template.render(wines=formatted_wines,
+                                    year_title=year_title)
 
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
@@ -80,5 +88,3 @@ if __name__ == '__main__':
     server = socketserver.TCPServer(("", PORT), Handler)
     print("serving at port", PORT)
     server.serve_forever()
-
-
